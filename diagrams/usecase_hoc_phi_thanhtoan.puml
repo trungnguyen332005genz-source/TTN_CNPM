@@ -1,0 +1,32 @@
+@startuml UseCase_HocPhi_ThanhToan
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Kế toán / Quản lý" as Accountant
+actor "Phụ huynh" as Parent
+actor "Giáo viên" as Teacher
+actor "Cổng thanh toán / Ngân hàng" as Bank
+
+rectangle "Phân hệ Quản lý Học phí & Thanh toán" {
+    usecase "UC-HP01: Lập bảng tính học phí & tiền ăn" as UC_HP01
+    usecase "UC-HP02: Ghi nhận ngày nghỉ để trừ tiền ăn" as UC_HP02
+    usecase "UC-HP03: Phát hành thông báo học phí tháng" as UC_HP03
+    usecase "UC-HP04: Phụ huynh xem chi tiết học phí" as UC_HP04
+    usecase "UC-HP05: Thanh toán học phí qua mã VietQR" as UC_HP05
+    usecase "UC-HP06: Xác nhận & Cập nhật thanh toán" as UC_HP06
+}
+
+Accountant --> UC_HP01
+Accountant --> UC_HP03
+Accountant --> UC_HP06
+
+Teacher --> UC_HP02 : Điểm danh / Báo nghỉ
+Parent --> UC_HP02 : Nộp đơn xin nghỉ
+Parent --> UC_HP04 : Tra cứu tiền học
+Parent --> UC_HP05 : Quét mã QR
+
+Bank --> UC_HP06 : Gửi Webhook đối soát
+
+UC_HP01 ..> UC_HP02 : <<include>>
+UC_HP05 ..> UC_HP04 : <<extend>>
+@enduml

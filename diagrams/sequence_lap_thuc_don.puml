@@ -1,0 +1,45 @@
+@startuml Sequence_LapThucDon
+autonumber
+actor "Cán bộ Dinh dưỡng" as Staff
+boundary "ThucDonGUI" as GUI
+control "ThucDonController" as Ctrl
+entity "ThucDonService" as Service
+database "Database" as DB
+
+Staff -> GUI: 1. Chọn tuần cần lập thực đơn & khối lớp
+activate GUI
+GUI --> Staff: 2. Hiển thị ma trận các bữa ăn (Sáng, Trưa, Xế)
+deactivate GUI
+
+Staff -> GUI: 3. Chọn các món ăn cho từng ngày trong tuần
+activate GUI
+Staff -> GUI: 4. Nhấn "Lưu & Xuất bản thực đơn"
+GUI -> Ctrl: 5. submitWeeklyMenu(menuDTO)
+activate Ctrl
+
+Ctrl -> Service: 6. validateNutritionAndBudget(menuDTO)
+activate Service
+Service -> DB: 7. getDishNutrientDetails(dishIds)
+activate DB
+DB --> Service: 8. Return dishData (Calo, Protein, Price)
+deactivate DB
+
+Service -> Service: 9. calculateDailyTotals()
+Service -> DB: 10. saveWeeklyMenu(weeklyMenuEntity)
+activate DB
+DB --> Service: 11. Return menuId: 88
+deactivate DB
+
+Service -> DB: 12. updateMenuStatus(menuId, "PUBLISHED")
+activate DB
+DB --> Service: 13. Return Published
+deactivate DB
+
+Service --> Ctrl: 14. Return PublishSuccess
+deactivate Service
+
+Ctrl --> GUI: 15. Trả về trạng thái hoàn tất
+deactivate Ctrl
+GUI --> Staff: 16. Hiển thị thông báo "Ban hành thực đơn thành công"
+deactivate GUI
+@enduml

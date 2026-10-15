@@ -1,0 +1,45 @@
+@startuml Sequence_ThemTreEm
+autonumber
+actor "Quản lý" as Admin
+boundary "TreEmGUI" as GUI
+control "TreEmController" as Ctrl
+entity "TreEmService" as Service
+database "Database" as DB
+
+Admin -> GUI: 1. Nhấn nút "Thêm mới trẻ em"
+activate GUI
+GUI --> Admin: 2. Hiển thị form nhập hồ sơ trẻ
+deactivate GUI
+
+Admin -> GUI: 3. Nhập thông tin trẻ, sức khỏe, lớp & phụ huynh liên kết
+activate GUI
+Admin -> GUI: 4. Nhấn nút "Lưu hồ sơ"
+GUI -> Ctrl: 5. postCreateChild(childDTO)
+activate Ctrl
+
+Ctrl -> Service: 6. validateChildData(childDTO)
+activate Service
+Service -> DB: 7. checkClassCapacity(classId)
+activate DB
+DB --> Service: 8. Return classAvailable: true
+deactivate DB
+
+Service -> Service: 9. generateChildCode()
+Service -> DB: 10. insertChild(childEntity)
+activate DB
+DB --> Service: 11. Return childId: 105
+deactivate DB
+
+Service -> DB: 11. insertParentChildRelation(parentId, childId)
+activate DB
+DB --> Service: 12. Success
+deactivate DB
+
+Service --> Ctrl: 13. Return SuccessResult(childCode)
+deactivate Service
+
+Ctrl --> GUI: 14. Trả về kết quả thành công
+deactivate Ctrl
+GUI --> Admin: 15. Hiển thị thông báo "Thêm trẻ thành công"
+deactivate GUI
+@enduml

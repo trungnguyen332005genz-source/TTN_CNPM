@@ -1,0 +1,26 @@
+@startuml UseCase_QuanLyThucDon
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Cán bộ Dinh dưỡng / Quản lý" as Staff
+actor "Phụ huynh" as Parent
+actor "Giáo viên" as Teacher
+
+rectangle "Phân hệ Quản lý Thực đơn" {
+    usecase "UC-TD01: Xem danh sách thực đơn tuần" as UC_TD01
+    usecase "UC-TD02: Lập thực đơn tuần mới" as UC_TD02
+    usecase "UC-TD03: Chỉnh sửa thực đơn tuần" as UC_TD03
+    usecase "UC-TD04: Quản lý danh mục món & dưỡng chất" as UC_TD04
+    usecase "UC-TD05: Phụ huynh xem thực đơn của con" as UC_TD05
+}
+
+Staff --> UC_TD01
+Staff --> UC_TD02
+Staff --> UC_TD03
+Staff --> UC_TD04
+
+Parent --> UC_TD05
+Teacher --> UC_TD01
+
+UC_TD02 ..> UC_TD04 : <<include>>
+@enduml

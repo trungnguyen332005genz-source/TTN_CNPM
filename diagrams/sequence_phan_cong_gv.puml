@@ -1,0 +1,39 @@
+@startuml Sequence_PhanCongGiaoVien
+autonumber
+actor "Quản lý" as Admin
+boundary "PhanCongGUI" as GUI
+control "PhanCongController" as Ctrl
+entity "GiaoVienService" as Service
+database "Database" as DB
+
+Admin -> GUI: 1. Chọn Lớp học và Giáo viên cần phân công
+activate GUI
+Admin -> GUI: 2. Nhấn nút "Xác nhận phân công"
+GUI -> Ctrl: 3. assignTeacherToClass(teacherId, classId, role)
+activate Ctrl
+
+Ctrl -> Service: 4. checkTeacherAssignmentConflict(teacherId, schoolYear)
+activate Service
+Service -> DB: 5. queryCurrentAssignments(teacherId)
+activate DB
+DB --> Service: 6. Return existingAssignments: Empty
+deactivate DB
+
+Service -> DB: 7. saveTeacherClassAssignment(teacherId, classId, role)
+activate DB
+DB --> Service: 8. Return Success
+deactivate DB
+
+Service -> DB: 9. updateTeacherPermission(teacherId, classId)
+activate DB
+DB --> Service: 10. Return PermissionsUpdated
+deactivate DB
+
+Service --> Ctrl: 11. Return AssignmentSuccess
+deactivate Service
+
+Ctrl --> GUI: 12. Trả về thông báo phân công thành công
+deactivate Ctrl
+GUI --> Admin: 13. Cập nhật bảng sơ đồ lớp và hiển thị thông báo
+deactivate GUI
+@enduml

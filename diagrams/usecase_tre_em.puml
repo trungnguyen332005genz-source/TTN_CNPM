@@ -1,0 +1,29 @@
+@startuml UseCase_QuanLyTreEm
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Quản lý" as Admin
+actor "Giáo viên" as Teacher
+actor "Phụ huynh" as Parent
+
+rectangle "Phân hệ Quản lý Trẻ em" {
+    usecase "UC-TE01: Xem & Tìm kiếm danh sách trẻ" as UC_TE01
+    usecase "UC-TE02: Thêm mới hồ sơ trẻ em" as UC_TE02
+    usecase "UC-TE03: Chỉnh sửa hồ sơ trẻ em" as UC_TE03
+    usecase "UC-TE04: Xóa / Cập nhật trạng thái học" as UC_TE04
+    usecase "UC-TE05: Ghi nhận sức khỏe & sinh hoạt" as UC_TE05
+    usecase "UC-PH02: Thêm mới & liên kết phụ huynh" as UC_PH02
+}
+
+Admin --> UC_TE01
+Admin --> UC_TE02
+Admin --> UC_TE03
+Admin --> UC_TE04
+
+Teacher --> UC_TE01
+Teacher --> UC_TE05
+
+Parent --> UC_TE01 : Xem thông tin con mình
+
+UC_TE02 ..> UC_PH02 : <<include>>
+@enduml

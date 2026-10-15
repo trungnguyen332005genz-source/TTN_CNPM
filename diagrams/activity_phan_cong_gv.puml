@@ -1,0 +1,28 @@
+@startuml Activity_PhanCongGiaoVien
+title Sơ đồ hoạt động - Phân công giáo viên vào lớp học
+
+start
+:Quản lý mở giao diện Phân công lớp;
+:Hệ thống hiển thị danh sách lớp và giáo viên hiện tại;
+:Quản lý chọn Lớp học cần phân công;
+:Quản lý chọn Giáo viên và vai trò (Chủ nhiệm / Bán trú / Năng khiếu);
+:Nhấn "Xác nhận phân công";
+
+:Hệ thống kiểm tra ràng buộc phân công của giáo viên;
+if (Giáo viên đã chủ nhiệm lớp khác trong năm học?) then (Có trùng)
+  :Hiển thị thông báo xung đột phân công;
+  if (Xác nhận chuyển đổi lớp chủ nhiệm cho giáo viên?) then (Đồng ý chuyển)
+    :Hủy phân công tại lớp cũ;
+  else (Hủy thao tác)
+    :Giữ nguyên phân công cũ;
+    stop
+  endif
+else (Không trùng)
+endif
+
+:Lưu phân công mới vào CSDL;
+:Cập nhật quyền quản lý trẻ của lớp cho giáo viên;
+:Gửi thông báo phân công nhiệm vụ đến tài khoản giáo viên;
+:Hiển thị thông báo "Phân công thành công";
+stop
+@enduml

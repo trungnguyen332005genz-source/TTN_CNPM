@@ -1,0 +1,44 @@
+@startuml Sequence_TinhHocPhi_TienAn
+autonumber
+actor "Kế toán" as Accountant
+boundary "HocPhiGUI" as GUI
+control "HocPhiController" as Ctrl
+entity "TinhHocPhiService" as Service
+database "Database" as DB
+
+Accountant -> GUI: 1. Chọn Tháng/Năm (Tháng 10/2026) & bấm "Tính học phí"
+activate GUI
+GUI -> Ctrl: 2. calculateMonthlyFees(month, year)
+activate Ctrl
+
+Ctrl -> Service: 3. executeFeeCalculation(month, year)
+activate Service
+
+Service -> DB: 4. getActiveChildrenList()
+activate DB
+DB --> Service: 5. Return List<Children>
+deactivate DB
+
+loop Với từng học sinh trong danh sách
+  Service -> DB: 6. getAbsenceDaysWithNotice(childId, month, year)
+  activate DB
+  DB --> Service: 7. Return absenceDays (ví dụ: 2 ngày)
+  deactivate DB
+  
+  Service -> Service: 8. calculateMealFee(standardDays=22, absenceDays=2, unitPrice=30000) -> 600,000đ
+  Service -> Service: 9. calculateTotalFee(baseFee=1500000, mealFee=600000, otherFee=100000) -> 2,200,000đ
+  
+  Service -> DB: 10. saveInvoiceRecord(childId, invoiceDetails)
+  activate DB
+  DB --> Service: 11. Return invoiceId
+  deactivate DB
+end
+
+Service --> Ctrl: 12. Return FeeCalculationSummary
+deactivate Service
+
+Ctrl --> GUI: 13. Trả về bảng tổng hợp học phí chi tiết
+deactivate Ctrl
+GUI --> Accountant: 14. Hiển thị danh sách hóa đơn sẵn sàng phát hành
+deactivate GUI
+@enduml

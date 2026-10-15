@@ -1,0 +1,23 @@
+@startuml UseCase_QuanLyPhuHuynh
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Quản lý" as Admin
+actor "Phụ huynh" as Parent
+
+rectangle "Phân hệ Quản lý Phụ huynh" {
+    usecase "UC-PH01: Xem danh sách phụ huynh" as UC_PH01
+    usecase "UC-PH02: Thêm mới & liên kết phụ huynh - trẻ" as UC_PH02
+    usecase "UC-PH03: Cập nhật thông tin phụ huynh" as UC_PH03
+    usecase "UC-PH04: Hủy liên kết phụ huynh - trẻ" as UC_PH04
+    usecase "UC-PH05: Xem hồ sơ & thông tin của con" as UC_PH05
+}
+
+Admin --> UC_PH01
+Admin --> UC_PH02
+Admin --> UC_PH03
+Admin --> UC_PH04
+
+Parent --> UC_PH03 : Cập nhật số ĐT, địa chỉ
+Parent --> UC_PH05 : Quản lý nhiều con (1 PH - N Trẻ)
+@enduml

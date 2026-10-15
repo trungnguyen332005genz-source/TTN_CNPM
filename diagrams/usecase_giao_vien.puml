@@ -1,0 +1,23 @@
+@startuml UseCase_QuanLyGiaoVien
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Quản lý / Ban Giám Hiệu" as Admin
+actor "Giáo viên" as Teacher
+
+rectangle "Phân hệ Quản lý Giáo viên" {
+    usecase "UC-GV01: Xem danh sách giáo viên" as UC_GV01
+    usecase "UC-GV02: Thêm mới giáo viên" as UC_GV02
+    usecase "UC-GV03: Chỉnh sửa hồ sơ giáo viên" as UC_GV03
+    usecase "UC-GV04: Xóa / Khóa hồ sơ giáo viên" as UC_GV04
+    usecase "UC-GV05: Phân công lớp giảng dạy" as UC_GV05
+}
+
+Admin --> UC_GV01
+Admin --> UC_GV02
+Admin --> UC_GV03
+Admin --> UC_GV04
+Admin --> UC_GV05
+
+Teacher --> UC_GV01 : Xem danh sách đồng nghiệp
+@enduml

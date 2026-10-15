@@ -1,0 +1,31 @@
+@startuml Activity_TinhHocPhi_TienAn
+title Sơ đồ hoạt động - Tính tiền ăn và lập phiếu thu học phí
+
+start
+:Kế toán chọn Tháng/Năm cần tính học phí;
+:Kế toán nhấn "Bắt đầu tính toán tự động";
+
+:Hệ thống lấy danh sách toàn bộ trẻ đang theo học;
+while (Còn trẻ em trong danh sách?) is (Còn)
+  :Lấy thông tin học phí cơ bản và phí dịch vụ lớp;
+  :Truy vấn sổ điểm danh điện tử trong tháng của trẻ;
+  :Đếm số ngày nghỉ có phép hợp lệ báo trước;
+  
+  :Tính số ngày ăn thực tế = Tổng ngày ăn tiêu chuẩn - Số ngày nghỉ hợp lệ;
+  :Tính tiền ăn = Số ngày ăn thực tế * Đơn giá ăn/ngày;
+  :Tính Tổng tiền phải trả = Học phí + Tiền ăn + Phí dịch vụ - Giảm trừ;
+  :Tạo bản ghi hóa đơn chi tiết tương ứng với trẻ;
+endwhile (Hết danh sách)
+
+:Hệ thống hiển thị bảng tổng hợp học phí toàn trường/khối lớp;
+:Kế toán kiểm tra và đối soát các số liệu bất thường;
+if (Kế toán duyệt bảng tính?) then (Đồng ý)
+  :Lưu bảng học phí chính thức vào CSDL;
+  :Sinh mã hóa đơn cho từng học sinh;
+  :Phát hành phiếu thu điện tử tới tài khoản phụ huynh;
+  :Hiển thị thông báo "Lập học phí tháng hoàn tất";
+else (Cần chỉnh sửa)
+  :Điều chỉnh khoản tiền miễn giảm/đặc thù thủ công;
+endif
+stop
+@enduml

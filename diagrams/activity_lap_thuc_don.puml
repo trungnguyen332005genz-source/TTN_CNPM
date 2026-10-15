@@ -1,0 +1,31 @@
+@startuml Activity_LapThucDon
+title Sơ đồ hoạt động - Lập và ban hành thực đơn tuần
+
+start
+:Cán bộ dinh dưỡng chọn tuần cần lập thực đơn;
+:Hệ thống hiển thị ma trận thực đơn tuần (Thứ 2 - Thứ 6; Bữa Sáng/Trưa/Xế);
+if (Có muốn sao chép từ tuần trước?) then (Có)
+  :Nạp dữ liệu thực đơn tuần trước sang;
+else (Không)
+  :Tạo bảng thực đơn trống;
+endif
+
+repeat
+  :Chọn món ăn cho từng bữa từ danh mục món;
+  :Hệ thống tự động tính tổng năng lượng Calo & chi phí dự kiến;
+repeat while (Đã hoàn thiện tất cả các bữa trong tuần?) is (Chưa)
+->Đã xong;
+
+:Nhấn "Lưu và Phê duyệt";
+if (Kiểm tra định mức chi phí và cân đối dinh dưỡng đạt chuẩn?) then (Chưa đạt)
+  :Cảnh báo định mức vượt ngân sách hoặc thiếu dinh dưỡng;
+  :Chỉnh sửa lại các món ăn;
+else (Đạt chuẩn)
+endif
+
+:Lưu thực đơn chính thức vào CSDL;
+:Chuyển trạng thái thực đơn sang "Đã công bố";
+:Kích hoạt hiển thị trên App phụ huynh;
+:Hiển thị thông báo "Ban hành thực đơn thành công";
+stop
+@enduml

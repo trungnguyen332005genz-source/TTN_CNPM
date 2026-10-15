@@ -1,0 +1,37 @@
+@startuml Activity_ThanhToan_QR
+title Sơ đồ hoạt động - Thanh toán học phí bằng mã QR VietQR động
+
+start
+:Phụ huynh mở ứng dụng và xem chi tiết khoản học phí;
+:Phụ huynh nhấn nút "Thanh toán trực tuyến";
+
+:Hệ thống gọi dịch vụ sinh mã QR động (VietQR);
+:Sinh mã QR chứa: Số tài khoản trường, Số tiền chính xác, Mã hóa đơn duy nhất;
+:Hiển thị mã QR lên màn hình kèm bộ đếm ngược thời gian (15 phút);
+
+:Phụ huynh mở App Ngân hàng trên điện thoại cá nhân;
+:Phụ huynh chọn quét mã QR trên màn hình;
+:App Ngân hàng tự động nạp chính xác thông tin chuyển khoản;
+:Phụ huynh xác thực giao dịch (Vân tay / FaceID / OTP);
+
+if (Giao dịch thành công tại ngân hàng?) then (Thành công)
+  :Ngân hàng trích tiền và gửi Webhook (IPN) về máy chủ trường mầm non;
+  :Hệ thống trường nhận Webhook và kiểm tra chữ ký số bảo mật;
+  :Hệ thống đối soát Mã hóa đơn và Số tiền giao dịch;
+  
+  if (Dữ liệu khớp hoàn toàn?) then (Khớp 100%)
+    :Cập nhật trạng thái hóa đơn -> "Đã thanh toán";
+    :Lưu mã giao dịch ngân hàng và thời gian thanh toán;
+    :Sinh biên lai thu tiền điện tử;
+    :Gửi thông báo đẩy về ứng dụng của Phụ huynh: "Thanh toán thành công";
+    :Màn hình phụ huynh tự động đổi sang trạng thái hoàn tất;
+  else (Sai lệch số tiền/nội dung)
+    :Đánh dấu giao dịch vào hàng đợi "Chờ đối soát thủ công";
+    :Gửi thông báo cảnh báo cho Kế toán;
+  endif
+else (Thất bại / Hủy bỏ)
+  :App Ngân hàng báo giao dịch không thành công;
+  :Hóa đơn giữ nguyên trạng thái "Chưa thanh toán";
+endif
+stop
+@enduml

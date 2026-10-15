@@ -1,0 +1,60 @@
+@startuml Sequence_ThanhToan_VietQR
+autonumber
+actor "Phụ huynh" as Parent
+boundary "MobileAppGUI" as App
+control "PaymentController" as PayCtrl
+entity "VietQRService" as QRSvc
+participant "Cổng VietQR / Napas" as Gateway
+actor "App Ngân hàng" as BankApp
+control "WebhookReceiver" as Webhook
+database "Database" as DB
+
+Parent -> App: 1. Xem chi tiết học phí và nhấn "Thanh toán QR"
+activate App
+App -> PayCtrl: 2. requestPaymentQR(invoiceId)
+activate PayCtrl
+
+PayCtrl -> DB: 3. getInvoiceInfo(invoiceId)
+activate DB
+DB --> PayCtrl: 4. Return Amount=2,200,000đ, Code="HD0926"
+deactivate DB
+
+PayCtrl -> QRSvc: 5. generateDynamicVietQR(amount, content="HP TE01 HD0926")
+activate QRSvc
+QRSvc -> Gateway: 6. callGenerateQRAPI()
+activate Gateway
+Gateway --> QRSvc: 7. Return qrImageData, qrString
+deactivate Gateway
+QRSvc --> PayCtrl: 8. Return QRPayload
+deactivate QRSvc
+
+PayCtrl --> App: 9. Trả về mã VietQR động
+deactivate PayCtrl
+App --> Parent: 10. Hiển thị mã QR và bộ đếm ngược 15 phút
+deactivate App
+
+Parent -> BankApp: 11. Mở App ngân hàng cá nhân & quét mã QR
+activate BankApp
+BankApp -> BankApp: 12. Tự động nạp: TK trường, 2.200.000đ, ND: "HP TE01 HD0926"
+Parent -> BankApp: 13. Xác nhận chuyển tiền (FaceID / PIN)
+BankApp -> Gateway: 14. Chuyển khoản liên ngân hàng Napas247
+activate Gateway
+Gateway --> BankApp: 15. Báo giao dịch thành công
+deactivate BankApp
+
+Gateway -> Webhook: 16. Gửi Webhook Instant Payment Notification (IPN)
+activate Webhook
+deactivate Gateway
+
+Webhook -> Webhook: 17. Xác thực chữ ký số (Verify Signature)
+Webhook -> DB: 18. updateInvoiceStatus(invoiceId, "PAID", transId)
+activate DB
+DB --> Webhook: 19. Invoice Updated Successfully
+deactivate DB
+
+Webhook -> App: 20. Push Notification qua Socket / Firebase: "Thanh toán thành công"
+activate App
+App --> Parent: 21. Màn hình tự động chuyển sang "Biên lai thanh toán thành công"
+deactivate App
+deactivate Webhook
+@enduml

@@ -1,0 +1,32 @@
+@startuml Activity_ThemTreEm
+title Sơ đồ hoạt động - Thêm mới hồ sơ trẻ em & Phân lớp
+
+start
+:Quản lý nhấn "Thêm mới trẻ em";
+:Hệ thống hiển thị Form nhập thông tin trẻ;
+repeat
+  :Quản lý nhập họ tên, ngày sinh, giới tính, sức khỏe, lớp học;
+  :Quản lý chọn hoặc nhập thông tin phụ huynh liên kết;
+  :Nhấn "Lưu hồ sơ";
+  :Hệ thống kiểm tra tính hợp lệ của dữ liệu;
+backward:Hiển thị lỗi và yêu cầu sửa dữ liệu;
+repeat while (Dữ liệu hợp lệ?) is (Không)
+->Có;
+
+if (Lớp học được chọn đã đủ sĩ số tối đa?) then (Đúng - Quá sĩ số)
+  :Hiển thị cảnh báo lớp đã đầy;
+  if (Quản lý chọn đặc cách nhận thêm?) then (Không)
+    :Chọn lớp học khác còn chỗ;
+  else (Đồng ý đặc cách)
+    :Đánh dấu ghi chú tiếp nhận đặc cách;
+  endif
+else (Còn chỗ)
+endif
+
+:Hệ thống sinh tự động Mã học sinh duy nhất;
+:Lưu hồ sơ trẻ vào CSDL;
+:Tạo liên kết giữa Trẻ em và Phụ huynh;
+:Cập nhật sĩ số lớp học;
+:Hiển thị thông báo "Thêm trẻ thành công";
+stop
+@enduml
